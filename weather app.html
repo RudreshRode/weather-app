@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rudra's Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: #222;
+    }
+
+    .weather-box {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 300px;
+    }
+
+    input {
+      padding: 10px;
+      width: 80%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    .result {
+      margin-top: 15px;
+    }
+
+    .result img {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Track weather using Rudra's website</h1>
+
+  <div class="weather-box">
+    <input type="text" id="locationInput" placeholder="Enter city name">
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const location = document.getElementById("locationInput").value;
+      if (!location) {
+        alert("Please enter a location");
+        return;
+      }
+
+      const apiKey = "e94f305d68aa4bcc883122836250409";
+      const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("City not found");
+
+        const data = await response.json();
+        document.getElementById("result").innerHTML = `
+          <h3>${data.location.name}, ${data.location.country}</h3>
+          <p><strong>Temperature:</strong> ${data.current.temp_c}°C</p>
+          <p><strong>Condition:</strong> ${data.current.condition.text}</p>
+          <img src="${data.current.condition.icon}" alt="Weather Icon">
+        `;
+      } catch (error) {
+        document.getElementById("result").innerHTML = `<p style='color:red;'>${error.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
